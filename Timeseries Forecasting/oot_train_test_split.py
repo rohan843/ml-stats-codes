@@ -8,17 +8,25 @@ and overfitting.
 """
 
 import pandas as pd
+from typing import Tuple
 
 
-def oot_train_test_split(df: pd.DataFrame, date_cutoff: str, date_col="date"):
+def oot_train_test_split(
+    df: pd.DataFrame, date_cutoff: str, date_col: str = "date"
+) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """
-    Splits a dataset based on a date column and a date cutoff. Dates before the cutoff serve as
-    train data, dates after the cutoff serve as test data.
+    Splits a dataset into train and test sets based on a date column and a date cutoff. Dates before
+    the cutoff serve as train data, dates on or after the cutoff serve as test data.
 
-    df: The pandas dataframe to split.
-    date_cutoff: The date string used as cutoff. All dates _strictly before_ this string count as \
-        train data.
-    date_col: Name of the column containing the date information in df.
+    Parameters:
+    df (pd.DataFrame): The pandas DataFrame to split.
+    date_cutoff (str): The date string used as cutoff. All dates strictly before this string count \
+        as train data. There should be an ordering among the date strings where later dates are \
+        lexically greater than earlier dates.
+    date_col (str): Name of the column containing the date information in df. Default is "date".
+
+    Returns:
+    Tuple[pd.DataFrame, pd.DataFrame]: A tuple containing the train and test DataFrames.
     """
     return (
         df[pd.to_datetime(df[date_col]) < pd.to_datetime(date_cutoff)].copy(deep=True),
